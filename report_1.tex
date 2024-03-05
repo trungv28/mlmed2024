@@ -1,0 +1,118 @@
+\documentclass{article}
+\usepackage{graphicx}
+% \usepackage{float}
+\title{Report on ECG hearbeat classification}
+\author{Tran The Trung}
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+The heart is a organ that primarily in charge of pumping blood throughout the body, 
+providing oxygen and nutrients to various tissues and organs. The heart is basically
+recognized as the living source for every live beings in the planet and human is obviously
+not an exception.\\
+
+\noindent The heartbeat, on the other hand, refers to one complete pulsation of a heart
+It is the regular movement of your heart as it sends blood around the body and it happens
+from birth till death .\\
+
+\noindent And with the ever-increasing pace of AI or more specifically Machine Learning, people
+have been able to enhance diagnosis, improve treatment and streamline healthcare.
+And if we take a closer look into heartbeat classification, ML algorithms have been
+employed to classify heartbeats into different categories, making foundation for
+solution of various problems.\\
+ 
+\section{Background}
+The data is about ECG heartbeat which composes of two hearbeat signals derived
+from two famous datasets in heartbeat classification, the MIT-BIH Arrhythmia
+Dataset and the PTB Diagnostic ECG Database. The signals correspond to
+electrocardiogram (ECG) shapes of heartbeats for the normal case and the cases
+affected by different arrhythmias and myocardial infarction. These signals
+are preprocessed and segmented, with each segment corresponding to a heartbeat.\\
+
+\noindent In this day, Convolutional Neural Network is one of the most popular
+Deep Learning model which is primarily used in Computer Vision domain to extract
+features from visual data such as images or videos. However, many reasearchs have shown
+that CNN also work well on 1D data or in this case, the classification of
+ECG heartbeat.
+
+\section{Method}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|}
+    \hline
+    Type        & \# Channels & Kernel Size & Stride & Padding \\ \hline
+    Convolution 1d & 32          & 3           & 1      & 1       \\ \hline
+    Max Pool    &             & 2           & 2      & 0       \\ \hline
+    Convolution 1d & 64          & 3           & 1      & 1       \\ \hline
+    Max Pool    &             & 2           & 2      & 0       \\ \hline
+    3 FC layers   &             &             &        &         \\ \hline
+    \end{tabular}
+    \end{table}
+
+I use a convolutional neural network with two convolution layers followed with
+a max pool layer and a ReLU activation function. After extracting features,
+I use fully connected layers to classify the signal.\\
+
+To explain the choice of architecture, using convolution helps scan the input
+signal with small, trainable filter and this acts as feature detectors. This type
+of layers play the same purpose as the original 2d convolution where it identifies
+basic patterns. The pooling layers are used to reduce the size of the signal or more
+specifically its channels. This is crucial to reduce the amount of parameters and
+computation while increase the robustness of the model. And ReLU activation function
+is there to add some non-linearity to the model which is the main purpose of a
+Deep Learning model.At the end of the network, fully connected layers perform high-level
+reasoning by combine these features and make the final decision about the class of the objec
+
+\section{Evaluation}
+
+\subsection{Dataset}
+
+\noindent In this practical section, I will only focus on the first data which is the 
+MITBIH data. This data contains the total of 109446 samples which are then divided
+into 87554 and 21892 sample for training and test set, respectively. There are in
+total 5 classes: N, S, V, F, and Q. All the samples in the data have already been
+cropped, downsampled and padded with zeros if necessary so that each of them has
+a fixed dimension of 188, with the latest column being the class.
+
+First, we need to visualize some aspects regarding the data.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{data_dist.png}
+    \caption{Data distribution before over-sampling}
+\end{figure}
+
+The figure 1 below show that the data is highly imbalanced so we need to 
+make steps to balance out the data. I have done this by over-sampling the data
+using SMOTE technique which increase the sample from all the minor class to be
+equal to the majority one.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{data_dist2.png}
+    \caption{Data distribution after over-sampling}
+\end{figure}
+
+\subsection{Result}
+The model achieve a 98 \% accuracy which is very high for 5-class classification
+problem. This show how powerful CNN model is to 1D data since it enables
+the ability of learning neighbor relationship between features in the data.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{conf_mat.png}
+    \caption{Confusion Matrix}
+\end{figure}
+From the confusion matrix, it is seen that the model perform well on every classes except
+for the the class 3. This shows that our model performs quite good overall and the 98 \%
+is not a result of a over-sampling procedure
+
+\section{Discussion}
+The extremely high accuracy might not be that great since there's might be some
+problems in training like overfit, imbalanced data or it might simply due to errors
+in code and I need to conduct further investigation on this.
+
+\end{document}
